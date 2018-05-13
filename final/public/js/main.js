@@ -185,12 +185,103 @@ $(document).ready(function($) {
     }
   });
 
-  $('#m_date').datepicker({
-	  'format': 'm/d/yyyy',
-	  'autoclose': true
-	});
-	$('#m_time').timepicker();
+	$('#m_time').timepicker({ 'step': 15 });
 
 
 
 });
+function fillSelect(select, url, selected){
+	$.get(url, function(data){
+	var options = '';
+	console.log(url);
+	$(data).each(function(key, value){
+		var attr = '';
+		if(value.permission || value.allowed){
+		  attr = "selected";
+		}
+		options += '<option style="background-color:rgba(84, 210, 1, 1)"; '+attr+' value="'+value.id+'">'+value.label+'</option>';
+	});
+	$(select).append(options);
+	if($(select)[0].hasAttribute('option')){
+	  $(select).val($(select).attr('option'));
+	}
+  });
+  }
+  
+  function saveForm(form, url, action){
+	  console.log('hola');
+	$(form).on('submit', function(e){
+	  e.preventDefault();	  
+	  hide($('.feedback'));
+	  $.post(url, $(form).serialize())
+	  .done(function(data){
+		responses(data, action);
+	  }).fail(function(data){
+		getErrors(data);  
+	  });
+	});
+  
+  }
+
+  function saveAjax(form, url, action){
+	$(form).on('submit', function(e){
+		e.preventDefault();
+		hide($('.feedback'));
+		console.log(new FormData(this));
+		$.ajax({
+			url: url,
+			type: 'POST',
+			dataType: "JSON",
+			data: new FormData(this),
+			processData: false,
+			contentType: false,
+			success: function (data){
+				responses(data, action);
+			},
+			error: function (data){
+				getErrors(data);  
+			}
+		});
+	});
+  }
+
+function getErrors(data){
+	if(data.responseJSON.error){
+	  responses(data.responseJSON.error, 1);
+	}else{
+	  $.each(data.responseJSON.errors, function(key,value){
+		$('.'+key+'_error').text(value).removeClass('d-none');
+	  });
+	}
+  }
+  
+  function hide(data){
+	$(data).each(function(k, v){
+	  $(v).html("").addClass('d-none');
+	});
+  }
+
+  
+function responses(data, action){
+	switch (action) {
+	  case 1: /*Alert*/ 
+	  	$('.modal-main-title').html('');
+	  	$('.modal_content').html(data.response);
+	  	$('#myModal').modal('show');
+	  break;
+	  case 2: /*Alert with redirect*/ 
+	  	$('.modal-main-title').html(data.title);
+	  	$('.modal_content').html(data.response);
+		$('.modal_footer_buttons').html('<a type="button" class="btn btn-secondary" href="'+data.location+'" class="button pink">Continuar</a>');
+		$('#myModal').modal('show');
+	  break;
+	  case 3: /*un modal ya abierto*/ 
+	  	$('.modal-main-title').html(data.title);
+	  	$('.modal_content').html(data.response);
+		$('.modal_footer_buttons').html('<a type="button" class="btn btn-secondary" href="'+data.location+'" class="button pink">Continuar</a>');
+	  break;
+	  default:
+	  window.location.href = ''+action; //only Redirect
+	  break;
+	}
+  }

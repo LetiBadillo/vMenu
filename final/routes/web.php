@@ -12,6 +12,9 @@
 */
 
 Route::get('/', function () {
-    $title = 'Inicio';
-    return view('dashboard.welcome', compact('title'));
+    return view('dashboard.welcome');
 });
+
+Auth::routes();
+
+Route::resource('/platillos', 'ProductsController');
