@@ -13,7 +13,7 @@ class StoreOrdersRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,17 @@ class StoreOrdersRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id' => 'required|integer', 
+            'total' => 'required|numeric', 
         ];
+    }
+    public function messages()
+    {
+    return [
+        'user_id.required' => 'Este campo es requerido.',
+        'user_id.integer' => 'Ese formato no es compatible.',
+        'total.required'  => 'Este campo es requerido.',
+        'total.numeric'  => 'Ese formato no es compatible.',
+    ];
     }
 }

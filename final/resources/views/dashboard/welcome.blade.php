@@ -29,9 +29,9 @@
                                       <p class="lead">{{$banner->description}}</p>
                                       <p class="text-primary menu-price">$ {{$banner->price}}</p>
                                       <div class="input-group col-md-12 px-5 pb-2 text-center">
-                                        <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                        <span data-id="{{$banner->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                         <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                        <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                        <span data-id="{{$banner->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                         <input type="hidden" class="price" value="{{$banner->price}}">
                                       </div>
                                     <p class="mb-0 pointer add-cart" data-id="{{$banner->id}}"><a class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart text-light "></i></a></p>
@@ -59,9 +59,9 @@
                                       <p class="lead">{{$banner->description}}</p>
                                       <p class="text-primary menu-price">$ {{$banner->price}}</p>
                                       <div class="input-group col-md-12 px-5 pb-2 text-center">
-                                        <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                        <span data-id="{{$banner->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                         <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                        <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                        <span data-id="{{$banner->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                         <input type="hidden" class="price" value="{{$banner->price}}">
                                     </div>
                                     <p class="mb-0 pointer add-cart" data-id="{{$banner->id}}"><a class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart text-light "></i></a></p>
@@ -87,9 +87,9 @@
                                       <p class="lead">{{$banner->description}}</p>
                                       <p class="text-primary menu-price">$ {{$banner->price}}</p>
                                       <div class="input-group col-md-12 px-5 pb-2 text-center">
-                                        <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                        <span data-id="{{$banner->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                         <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                        <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                        <span data-id="{{$banner->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                         <input type="hidden" class="price" value="{{$banner->price}}">
                                     </div>
                                     <p class="mb-0 pointer add-cart" data-id="{{$banner->id}}"><a class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart text-light "></i></a></p>
@@ -157,9 +157,9 @@
                     <h5 class="text-primary menu-price">${{$dish->price}}</h5>
                     <div class="col-md-12 px-5 py-1 pl-0 mb-1">
                             <div class="input-group text-center">
-                                <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                 <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                 <input type="hidden" class="price" value="{{$dish->price}}">
                             </div>
                     </div>
@@ -204,9 +204,9 @@
                     <h5 class="text-primary menu-price">${{$dish->price}}</h5>
                     <div class="col-md-12 px-5 py-1 pl-0 mb-1">
                             <div class="input-group text-center">
-                                <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                 <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                 <input type="hidden" class="price" value="{{$dish->price}}">
                             </div>
                     </div>

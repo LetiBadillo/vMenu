@@ -19,5 +19,7 @@ Auth::routes();
 
 Route::resource('/menu', 'ProductsController');
 Route::resource('/pedidos', 'OrdersController');
+Route::resource('/clientes', 'UsersController');
+
 Route::post('/cart', 'OrdersController@cart');
 Route::get('/', 'HomeController@index');

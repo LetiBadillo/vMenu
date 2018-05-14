@@ -85,7 +85,6 @@ $(document).ready(function($) {
 				$('.ftco-number').each(function(){
 					var $this = $(this),
 						num = $this.data('number');
-						console.log(num);
 					$this.animateNumber(
 					  {
 					    number: num,
@@ -158,7 +157,6 @@ $(document).ready(function($) {
 		  }
 		});
 		$('body').on('activate.bs.scrollspy', function () {
-		  console.log('nice');
 		})
 	};
 	OnePageNav();
@@ -185,31 +183,24 @@ $(document).ready(function($) {
     }
   });
 
-	$('#m_time').timepicker({ 'step': 15 });
+	$('.m_time').timepicker({ 'step': 15 });
 
 
 
 });
-function fillSelect(select, url, selected){
+function fillSelect(select, url){
 	$.get(url, function(data){
 	var options = '';
-	console.log(url);
 	$(data).each(function(key, value){
 		var attr = '';
-		if(value.permission || value.allowed){
-		  attr = "selected";
-		}
-		options += '<option style="background-color:rgba(84, 210, 1, 1)"; '+attr+' value="'+value.id+'">'+value.label+'</option>';
+		options += '<option value="'+value.id+'">'+value.room+'</option>';
 	});
 	$(select).append(options);
-	if($(select)[0].hasAttribute('option')){
-	  $(select).val($(select).attr('option'));
-	}
+	
   });
   }
   
   function saveForm(form, url, action){
-	  console.log('hola');
 	$(form).on('submit', function(e){
 	  e.preventDefault();	  
 	  hide($('.feedback'));
@@ -227,7 +218,6 @@ function fillSelect(select, url, selected){
 	$(form).on('submit', function(e){
 		e.preventDefault();
 		hide($('.feedback'));
-		console.log(new FormData(this));
 		$.ajax({
 			url: url,
 			type: 'POST',

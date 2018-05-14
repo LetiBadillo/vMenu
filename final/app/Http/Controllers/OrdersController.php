@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Models\Order;
-use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrdersRequest;
 use Illuminate\Http\Request;
+use Auth;
 
 class OrdersController extends Controller
 {
@@ -17,10 +17,19 @@ class OrdersController extends Controller
 
     public function index(Request $request){
         $orders = '';     
+        /**
+         * Status
+         * 1 - En espera
+         * 2 - Orden tomada
+         * 3 - Entregada
+         */
         if(Auth::user()->user_type != 4){
             $orders = Order::all();     
-        }else{
-            $orders = Order::where('user_id', Auth::id());
+        }elseif(Auth::user()->user_type == 3){
+            $orders = Order::where('status', 1)->orWhere('status', 2)->get();
+        }   
+        else{
+            $orders = Order::where('user_id', Auth::id())->get();
         }
 
         if($request->ws == "all"){
@@ -32,45 +41,40 @@ class OrdersController extends Controller
         if($request->ws == "status"){
             $orders =  Order::where('status', $request->status)->get();
         }
-
         return view('order.index', compact('orders'));
     }
     public function create(){
         return view('order.create');
     }
 
-    public function store(StoreProductsRequest $request){
+    public function store(StoreOrdersRequest $request){
         try{
             DB::beginTransaction();
-            $file = $request->picture;
-            $extension = $file->getClientOriginalExtension();
-            if($request->is_featured){
-                if($request->is_featured != 9){
-                    Order::where('is_featured', $request->is_featured)->update(['is_featured' => null]);
-                }
-            }
-            $order = Order::create([
-            'name' => $request->name, 
-            'description' => $request->description, 
-            'price' => $request->price, 
-            'type' => $request->type, 
-            'picture' => $file->getClientOriginalName(), 
-            'is_featured' => $request->is_featured
+            $order = Order::create(
+                ['user_id' => $request->user_id, 
+                'total' => $request->total, 
+                'status' => 1, 
             ]);
-            $order->update(['picture' => 'platillo-'.$order->id.'.'.$extension]);
-
-            $file->move('platillos', 'platillo-'.$order->id.'.'.$extension);
+            
+            foreach($request->product_id as $key => $product){
+                OrderDetail::create([
+                    'order_id' => $order->id, 
+                    'product_id' => $product, 
+                    'quantity' => $request->quantity[$key], 
+                    'price' => $request->product_total[$key], 
+                    'notes' => $request->notes[$key]
+                    ]);
+            }
             DB::commit();
             
             return \Response::json(array(
                 'response' => 'Cambios guardados correctamente.',
-                'location' => '/menu'.'/'.$order->id,
-                'title' => $order->name
+                'location' => '/pedidos'.'/'.$order->id,
+                'title' => 'Su orden se encuentra en espera'
             ), 200);
             
         }catch(\Exception $e){
             DB::rollback();
-            \File::delete('platillos'.'/'.$file->getClientOriginalName());
             return \Response::json(array(
                 'error' => $e->getMessage(),
             ), 400);
@@ -87,53 +91,18 @@ class OrdersController extends Controller
         try{
             DB::beginTransaction();
             $order = Order::findOrFail($id);
-            $enabled = $order->enabled;
-            if($request->enabled){
-                $enabled = $request->enabled;
-            }
-            if($request->is_featured){
-                if($request->is_featured != 9){
-                    Order::where('id', '!=', $order->id)->where('is_featured', $request->is_featured)->update(['is_featured' => null]);
-                }
-            }
-            if($request->picture){
-                \File::delete('platillos'.'/'.$order->picture);
-                $file = $request->picture;
-            $extension = $file->getClientOriginalExtension();
-            $order->update([
-                'name' => $request->name, 
-                'description' => $request->description, 
-                'price' => $request->price, 
-                'type' => $request->type, 
-                'picture' => $file->getClientOriginalName(), 
-                'is_featured' => $request->is_featured,
-                'enabled' => $enabled
-            ]);
-            $order->update(['picture' => 'platillo-'.$order->id.'.'.$extension]);
-            $file->move('platillos', 'platillo-'.$order->id.'.'.$extension);
-            }else{
-                $order->update([
-                    'name' => $request->name, 
-                    'description' => $request->description, 
-                    'price' => $request->price, 
-                    'type' => $request->type, 
-                    'is_featured' => $request->is_featured,
-                    'enabled' => $enabled
-                ]);
-            }
+            $order->update($request->all());
             
             DB::commit();
              $response = 'Cambios guardados correctamente.';
             
             return \Response::json(array(
                 'response' => $response,
-                'location' => '/menu'.'/'.$id,
-                'title' => $order->name
+                'title' => 'Success'
             ), 200);
             
         }catch(\Exception $e){
             DB::rollback();
-            \File::delete('platillos'.'/'.$file->getClientOriginalName());
             return \Response::json(array(
                 'error' => $e->getMessage(),
             ), 400);

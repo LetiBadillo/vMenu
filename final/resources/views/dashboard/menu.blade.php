@@ -59,9 +59,9 @@
                             <input type="hidden" class="price" value="{{$dish->price}}">
                             <div class="col-md-4 pl-0 mb-1">
                                 <div class="input-group">
-                                    <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                    <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                     <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                    <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                    <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                 </div>
                             </div>
                             <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>
@@ -89,9 +89,9 @@
                               <input type="hidden" class="price" value="{{$dish->price}}">
                               <div class="col-md-4 pl-0 mb-1">
                                   <div class="input-group">
-                                      <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                      <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                       <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                      <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                      <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                   </div>
                               </div>
                               <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>
@@ -120,9 +120,9 @@
                               <input type="hidden" class="price" value="{{$dish->price}}">
                               <div class="col-md-4 pl-0 mb-1">
                                   <div class="input-group">
-                                      <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                      <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                       <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                      <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                      <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                   </div>
                               </div>
                               <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>
@@ -151,9 +151,9 @@
                                 <input type="hidden" class="price" value="{{$dish->price}}">
                                 <div class="col-md-4 pl-0 mb-1">
                                     <div class="input-group">
-                                        <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                        <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                         <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                        <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                        <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                     </div>
                                 </div>
                                 <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>
@@ -183,9 +183,9 @@
                               <input type="hidden" class="price" value="{{$dish->price}}">
                               <div class="col-md-4 pl-0 mb-1">
                                   <div class="input-group">
-                                      <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                      <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                       <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                      <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                      <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                   </div>
                               </div>
                               <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>
@@ -214,9 +214,9 @@
                               <input type="hidden" class="price" value="{{$dish->price}}">
                               <div class="col-md-4 pl-0 mb-1">
                                   <div class="input-group">
-                                      <span class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
+                                      <span data-id="{{$dish->id}}" class="plus input-group-addon"><i class="fas bg-light fa-plus"></i></span>
                                       <input type="number" class="quantity_input form-control form-control-sm text-right" value="1" >
-                                      <span class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
+                                      <span data-id="{{$dish->id}}" class="minus bg-light input-group-addon"><i id="minus" class="fas fa-minus bg-light"></i></span>
                                   </div>
                               </div>
                               <p class="add-cart pointer" data-id="{{$dish->id}}">Añadir al carrito <i class="fa fa-shopping-cart text-danger "></i></p>

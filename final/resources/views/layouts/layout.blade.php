@@ -84,19 +84,28 @@
       </div>
     </nav>
     <ul class="navbar-side" id="navbarSide">
-        <form action="">
+        <form id="orderNowForm" method="POST" action="">
+            {{ csrf_field() }}
             <li class="navbar-side-item px-2">                
             <a href="#" class="side-link pl-3 overlay text-left"><i class="fas fa-times"></i></a>
             <br>    
             <p class="text-center">Orden de compra <i class="fa fa-shopping-cart text-danger"></i></p>
             </li>     
             
-            <li id="total-li" class="d-none navbar-side-item px-2 py-3 text-center">
+            <li id="total-li" class="d-none navbar-side-item px-5 py-2 text-center">
+              @if(Auth::user() && Auth::user()->user_type != 4)
+                <p class="text-left text-primary">Cuarto</p>
+                <select name="user_id" id="rooms" class="form-control">
+                  <option value="">---Seleccionar --</option>
+                </select>
+              @else
+              <input type="hidden" name="user_id" value="{{Auth::id()}}">
+              @endif
             <div class="media menu-item">
                       <div class="media-body">
                         <h5 id="order_total" class="mt-0"></h5>
                         <input type="hidden" class="order_total" name="total">
-                        <button type="submit" class="btn btn-default btn-block">Hacer pedido</button>
+                        <button type="submit" id="orderNow" class="btn btn-primary btn-block">Hacer pedido</button>
                       </div>
             </li>
             <!-- insert more side-items if you so choose -->
@@ -288,9 +297,10 @@ $(function() {
         $('#total-li').show().removeClass('d-none');
         var find_input = $('#navbarSide').find('.order-product-detail-'+$(this).attr('data-id'));
         var element = $(this).closest('.product-detail-'+$(this).attr('data-id'))[0];
+        console.log(element);
         var price = parseFloat($(element).find('.price').val())*parseFloat($(element).find('.quantity_input').val());
         if(find_input.length == 0){
-            var content = '<li class="navbar-side-item px-3 pt-2 py-0 order-product-detail-'+$(this).attr('data-id')+'">\
+            var content = '<li class="navbar-side-item px-3 pt-2 this_cart py-0 order-product-detail-'+$(this).attr('data-id')+'">\
             <div class="media menu-item">\
                       <img class="mr-3 product-img img-fluid" src="'+$(element).find('.product-img').attr('src')+'">\
                       <div class="media-body">\
@@ -307,16 +317,18 @@ $(function() {
                             <label for="note">Especificaciones</label>\
                             <br>\
                             <small class="text-muted">(Sin mayonesa, sin hielo, etc.)</small>\
-                            <input type="text" name="note[]" class="form-control form-control-sm">\
+                            <input type="text" name="notes[]" class="form-control form-control-sm">\
                             <input type="hidden" name="product_id[]" value="'+$(this).attr('data-id')+'" class="form-control form-control-sm">\
                         </div>\
                       </div>\
-            </li>';
+                      </div>\
+                      </li>';
 
         /**Solo aumentar la cantidad en el carrito si se repite */
         $('#total-li').before(content);
-        minusFunction($('.minus-c'), 2);
-        plus($('.plus-c'), 2);
+        $('.minus-c, .plus-c').unbind( "click" );
+        minusFunction($('.minus-c'), 1);
+        plus($('.plus-c'), 1);
         }else{
             var quantity = parseInt($(element).find('.quantity_input').val(), 10) + parseInt($(find_input).find('.quantity_input').val(), 10);
             price = parseFloat($(find_input).find('.unit_price').val())*quantity;
@@ -328,9 +340,21 @@ $(function() {
         var total = getTotal();
         $('#order_total').text('Total: $'+total);
         $('.order_total').val(total);
-
+        /*var pop = '';
+        $('.this_cart').each(function(k, v){
+            pop += $(v)[0].outerHTML;
+        });
+        localStorage.setItem("cart", pop);
+        console.log(localStorage.cart);*/
     });
-
+    @if(Auth::user())
+        var url_order = "{{url('pedidos')}}";
+        saveForm($('#orderNowForm'), url_order, 2);
+    @endif
+    @if(Auth::user() && Auth::user()->user_type != 4)
+        var url = '/clientes?ws=all';
+      fillSelect($('#rooms'), url);
+    @endif
     @if(Auth::user() && Auth::user()->user_type == 1)
         var url_save_dish = "{{url('/menu')}}";
             $('#add_dish').on('click', function(e){
@@ -401,11 +425,18 @@ $(function() {
 
     function plus(input, type){
         $(input).on('click', function(e){
-        var input = $(this).closest('.input-group').find('.quantity_input');
-        input.val(parseInt($(input).val(), 10) +1);
+          e.preventDefault();
+          console.log('click');
+
+        var inp = $(this).closest('.input-group').find('.quantity_input');
+        console.log('this is imp');
+        console.log(inp);
+        var number = parseInt($(inp).val(), 10);
+        number++;
+        inp.val(number);
             if(type == 2){
                 var element =  $(this).closest('li');
-                var price = parseFloat($(element).find('.unit_price').val())*$(input).val();
+                var price = parseFloat($(element).find('.unit_price').val())*$(inp).val();
                 $(element).find('.menu-price').text('$'+price);
                 $(element).find('.actual_price').val(price);
                 var total = getTotal();
@@ -426,23 +457,19 @@ $(function() {
     }
     function minusFunction(input, type){
         $(input).on('click', function(e){
-        var input = $(this).closest('.input-group').find('.quantity_input')
-        var number = parseInt($(input).val(), 10);
-        if(number > 0){
-            number--;
-        }
-        
-        input.val(number);
+        var inp = $(this).closest('.input-group').find('.quantity_input');
+        var number = parseInt($(inp).val(), 10);
+        number--;
+        inp.val(number);
         if(type == 2){
             var element =  $(this).closest('li');
             if(number == 0){
                 element.remove();
-                
                 if($('.actual_price').length == 0){
                     $('#total-li').addClass('d-none').hide();
                 }
             }else{
-                price = parseFloat($(element).find('.unit_price').val())*$(input).val();
+                price = parseFloat($(element).find('.unit_price').val())*$(inp).val();
                 $(element).find('.menu-price').text('$'+price);
                 $(element).find('.actual_price').val(price);
             }

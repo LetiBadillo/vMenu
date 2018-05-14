@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('user_id');
             $table->decimal('total');
             $table->integer('status')->default(1);
-            $table->time('time');
+            $table->time('time')->nullable();
             $table->integer('enabled')->default(1);
             $table->timestamps();
 
