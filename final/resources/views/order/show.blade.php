@@ -48,9 +48,13 @@
                             </td>
                             <td>
                                 @if($order->time == null)
-                                    Pendiente
+                                    @if($order->status == 3)
+                                        {{$order->updated_at->diffForHumans()}}
+                                    @else
+                                        Pendiente
+                                    @endif
                                 @else
-                                    {{$order->time}}
+                                    {{$order->timeFormat}}
                                 @endif
 
                             </td>

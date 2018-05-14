@@ -49,21 +49,6 @@
                                 </a></td>
                             <td>{{$order->id}}</td>
                             <td>${{$order->total}}
-                            @if($order->status == 1)
-                                        <div class="progress">
-                                            <div class="progress-bar bg-danger progress-bar-striped" style="width:10%"></div>
-                                        </div>
-                                    @elseif($order->status == 2)
-                                        <div class="progress">
-                                            <div class="progress-bar bg-warning progress-bar-striped" style="width:60%"></div>
-                                        </div>
-                                    @elseif($order->status == 3)
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success progress-bar-striped" style="width:100%"></div>
-                                        </div>
-                                    @endif 
-                            </td>
-                            <td>{{$order->time}}</td>
                             <td>
                                 <a class="text-secondary" href="{{url('pedidos')}}/{{$order->id}}">
                                     Ver detalle

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -10,17 +10,9 @@ class Order extends Model
     
     protected $table = 'orders';
 
-    protected $appends = ['statusLabel'];
-    
-        public function order_detail(){
-            return $this->hasMany(OrderDetail::class, 'order_id');
-        }
+    protected $appends = ['statusLabel', 'timeFormat'];
 
-    public function user(){
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function getstatusLabelAttribute(){
+    public function getStatusLabelAttribute(){
         $label = '';
         switch ($this->status) {
             case '1':
@@ -30,10 +22,32 @@ class Order extends Model
                 $label = 'Orden tomada';
             break;
             case '3':
-                $label = 'Entregado';
+                $label = 'Entregada';
                 break;
         }
         return $label;
     }
+
+    public function getTimeFormatAttribute (){
+        if($this->time != null){
+            Carbon::setLocale('es');
+            $myArray = explode(':', $this->time);
+            return Carbon::createFromTime($myArray[0], $myArray[1], $myArray[2], 'America/Mexico_City')->diffForHumans();
+        }else{
+            return null;
+        }
+        
+    }
+
+    
+        public function order_detail(){
+            return $this->hasMany(OrderDetail::class, 'order_id');
+        }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    
 
 }

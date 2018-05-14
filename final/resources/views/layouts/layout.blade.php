@@ -63,13 +63,16 @@
                       <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Panel de administración</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{url('menu')}}">Productos/Combos</a>
-                            <a class="dropdown-item" href="#">Reportes</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}">Pedidos</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}?ws=report">Reportes</a>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
                                     <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                         </div>
                   </li> 
                 @elseif(Auth::user()->user_type == 3)
                   <li class="nav-item"><a href="{{url('pedidos')}}" class="nav-link">Pedidos</a></li>
+                  <li class="nav-item"><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">Cerrar sesión</a></li>
+                  <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                 @endif
             @else
                 <li class="nav-item"><a href="{{url('login')}}" class="nav-link">Iniciar sesión</a></li>

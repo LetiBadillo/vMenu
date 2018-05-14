@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrdersRequest;
 use Illuminate\Http\Request;
@@ -23,10 +24,21 @@ class OrdersController extends Controller
          * 2 - Orden tomada
          * 3 - Entregada
          */
-        if(Auth::user()->user_type != 4){
+        if(Auth::user()->user_type == 1 && $request->ws="report"){
+            $users = User::where('user_type', 4)->with('orders');
+            if($request->user){
+                $users = $users->where('id', $request->user);
+            }
+            return $users->get();
+        }
+        if(Auth::user()->user_type < 3 ){
             $orders = Order::all();     
         }elseif(Auth::user()->user_type == 3){
-            $orders = Order::where('status', 1)->orWhere('status', 2)->get();
+            $orders = Order::where('status', 1)->orWhere('status', 2)->with('order_detail')->get();
+            if($request->ws=="onlyusers"){
+                return $orders;   
+            }
+            return view('order.index', compact('orders'));
         }   
         else{
             $orders = Order::where('user_id', Auth::id())->get();
@@ -95,7 +107,7 @@ class OrdersController extends Controller
         return view('order.show', compact('order'));
     }
 
-    public function update(UpdateProductsRequest $request, $id){
+    public function update(Request $request, $id){
         try{
             DB::beginTransaction();
             $order = Order::findOrFail($id);
