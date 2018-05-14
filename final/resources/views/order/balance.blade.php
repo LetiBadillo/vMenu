@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb bg-light">
     <li class="breadcrumb-item"><a href="{{url('/')}}">Inicio</a></li>
-    <li class="breadcrumb-item">Historial</li>
+    <li class="breadcrumb-item">Estado de cuenta</li>
   </ol>
 </nav>
 </div>
@@ -15,7 +15,19 @@
       <div class="container">
         <div class="row">
             <div class="col-md-12 text-center mb-2 ftco-animate">
-                <h2 class="display-4">Historial</h2>
+                <h2 class="display-4">Estado de Cuenta</h2>
+                @php $total = 0;
+                if(count($orders)){
+                        foreach($orders as $order){
+                            $total += $order->total;
+                        }
+                    }
+                @endphp
+                <div class="row justify-content-center">
+              <div class="col-md-7">
+                <p class="lead"> Total: ${{$total}}</p>
+              </div>
+            </div>
             </div>
 
             <div class="col-md-12 text-center text-dark">
@@ -24,24 +36,19 @@
                         <tr>
                         <th scope="col">+</th>
                         <th scope="col">#Orden</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Entrega</th>
+                        <th scope="col">Total</th>
                         <th scope="col">Detalle</th>
-                        <th scope="col">Confirmar status</th>
                         </tr>
                     </thead>
                     <tbody id="OrdersTableBody">
                     @if(count($orders))
                         @foreach($orders as $order)
-                        <form class="updateOrderNow" method="POST">
-                            {{ csrf_field() }}
-                            <input name="_method" type="hidden" value="PUT">
                         <tr>
                             <td><a class="text-secondary" data-toggle="collapse" href="#c-{{$order->id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                                     +
                                 </a></td>
                             <td>{{$order->id}}</td>
-                            <td>{{$order->statusLabel}}
+                            <td>${{$order->total}}
                             @if($order->status == 1)
                                         <div class="progress">
                                             <div class="progress-bar bg-danger progress-bar-striped" style="width:10%"></div>
@@ -56,46 +63,11 @@
                                         </div>
                                     @endif 
                             </td>
-                            <td scope"col">
-                            @if($order->time == null)
-                                    @if(Auth::user()->user_type != 3)
-                                    Pendiente
-                                    @else   
-                                        Tiempo de entrega: <input type="text" name="time" class="text-center form-control m_time" id="m_time">
-                                        <small class="text-danger time_error feedback d-none"></small>
-                                    
-                                    @endif
-                                @else
-                                    {{$order->time}}
-                                @endif
-                            </td>
+                            <td>{{$order->time}}</td>
                             <td>
                                 <a class="text-secondary" href="{{url('pedidos')}}/{{$order->id}}">
                                     Ver detalle
                                 </a>
-                            </td>
-                            <td>
-                                @if($order->status == 1)
-                                <div class="form-group">
-                                <div class="col-sm-10">
-                                  <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input name="status" value="2" class="form-check-input" type="checkbox"> Orden en proceso
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                                @elseif($order->status == 2)
-                                <div class="form-group">
-                                <div class="col-sm-10">
-                                  <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input value="3" name="status" class="form-check-input" type="checkbox"> Orden terminada
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                                @endif 
                             </td>
                             <td>
                                 
@@ -103,9 +75,8 @@
                             
                             
                             </tr>
-                            </form>
                             <tr class="collapse detail" id="c-{{$order->id}}">
-                            <td class="align-middle text-center" colspan="6">
+                            <td class="align-middle text-center" colspan="5">
 
                                 @if(count($order->order_detail))                                    
                                     <br>
@@ -146,17 +117,8 @@
 
 
 $(function() {
-        
+    
         $('.hidden-element').addClass('d-none').hide();
-
-        @if(Auth::user()->user_type == 3)
-        $('.form-check-input').on('click', function(e){
-            var url = "{{url('pedidos')}}/"+$(this).attr('data-id');
-            console.log(url);
-            saveForm($('.updateOrderNow'), url, 4);
-            $(this).closest('form').submit();
-        });
-        @endif
 });
 
 </script>

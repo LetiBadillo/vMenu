@@ -51,23 +51,25 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cuenta</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="#">Estado de cuenta</a>
-                            <a class="dropdown-item" href="#">Pedidos</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}?ws=balance">Estado de cuenta</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}">Pedidos</a>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
                                     <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                         </div>
                     </li>
                     <li class="nav-item"><a href="#section-contact" class="nav-link">Contacto</a></li>            
                 @elseif(Auth::user()->user_type == 1)
-                <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Panel de administración</a>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Panel de administración</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{url('menu')}}">Productos/Combos</a>
                             <a class="dropdown-item" href="#">Reportes</a>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
                                     <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                         </div>
-                    </li> 
+                  </li> 
+                @elseif(Auth::user()->user_type == 3)
+                  <li class="nav-item"><a href="{{url('pedidos')}}" class="nav-link">Pedidos</a></li>
                 @endif
             @else
                 <li class="nav-item"><a href="{{url('login')}}" class="nav-link">Iniciar sesión</a></li>
@@ -84,7 +86,7 @@
       </div>
     </nav>
     <ul class="navbar-side" id="navbarSide">
-        <form id="orderNowForm" method="POST" action="">
+        <form id="orderNowForm" erase-cart="true" method="POST" action="">
             {{ csrf_field() }}
             <li class="navbar-side-item px-2">                
             <a href="#" class="side-link pl-3 overlay text-left"><i class="fas fa-times"></i></a>
@@ -271,6 +273,7 @@
 <script>
 $( document ).ready(function() {
     // Open navbarSide when button is clicked
+  
     $('#navbarSideButton').on('click', function() {
         $('#navbarSide').addClass('reveal');
         $('.overlay').show();
@@ -289,6 +292,14 @@ $( document ).ready(function() {
 
 $(function() {
 
+  if(localStorage.cart){
+      $('#total-li').before(localStorage.cart);
+      $('#total-li').show().removeClass('d-none');
+      $('.order_total').val(localStorage.cart_total);
+      minusFunction($('.minus-c'), 2);
+      plus($('.plus-c'), 2);
+    }
+
     minusFunction($('.minus'), 1);
     plus($('.plus'), 1);
     
@@ -297,7 +308,6 @@ $(function() {
         $('#total-li').show().removeClass('d-none');
         var find_input = $('#navbarSide').find('.order-product-detail-'+$(this).attr('data-id'));
         var element = $(this).closest('.product-detail-'+$(this).attr('data-id'))[0];
-        console.log(element);
         var price = parseFloat($(element).find('.price').val())*parseFloat($(element).find('.quantity_input').val());
         if(find_input.length == 0){
             var content = '<li class="navbar-side-item px-3 pt-2 this_cart py-0 order-product-detail-'+$(this).attr('data-id')+'">\
@@ -340,12 +350,8 @@ $(function() {
         var total = getTotal();
         $('#order_total').text('Total: $'+total);
         $('.order_total').val(total);
-        /*var pop = '';
-        $('.this_cart').each(function(k, v){
-            pop += $(v)[0].outerHTML;
-        });
-        localStorage.setItem("cart", pop);
-        console.log(localStorage.cart);*/
+        cart();
+        
     });
     @if(Auth::user())
         var url_order = "{{url('pedidos')}}";
@@ -426,11 +432,7 @@ $(function() {
     function plus(input, type){
         $(input).on('click', function(e){
           e.preventDefault();
-          console.log('click');
-
         var inp = $(this).closest('.input-group').find('.quantity_input');
-        console.log('this is imp');
-        console.log(inp);
         var number = parseInt($(inp).val(), 10);
         number++;
         inp.val(number);
@@ -443,11 +445,18 @@ $(function() {
                 $('#order_total').text('Total: $'+total);
                 $('.order_total').val(total);
             }
-        
+            cart();
        });
     }
 
-    
+    function cart(){
+      var cart = '';
+        $('.this_cart').each(function(k, v){
+            cart += $(v)[0].outerHTML;
+        });
+        localStorage.cart = cart;
+        localStorage.cart_total = $('.order_total').val();
+      }
     function getTotal(){
         var total = 0;
             $('.actual_price').each(function(){
@@ -479,6 +488,7 @@ $(function() {
                 $('.order_total').val(total);
             
         }
+        cart();
     });
     }        
         

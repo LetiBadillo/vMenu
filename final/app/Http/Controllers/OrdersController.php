@@ -30,6 +30,14 @@ class OrdersController extends Controller
         }   
         else{
             $orders = Order::where('user_id', Auth::id())->get();
+        
+        }
+        if(Auth::user()->user_type == 4  && $request->ws == "balance"){
+            $orders = Order::where('user_id', Auth::id())->where('status', '!=', 4)->get();
+            return view('order.balance', compact('orders'));
+        }elseif(Auth::user()->user_type != 4  && $request->ws == "balance"){
+            $orders = Order::where('user_id', $request->user)->where('status', '!=', 4)->get();
+            return view('order.balance', compact('orders'));
         }
 
         if($request->ws == "all"){

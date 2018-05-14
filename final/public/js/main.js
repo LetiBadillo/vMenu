@@ -202,10 +202,18 @@ function fillSelect(select, url){
   
   function saveForm(form, url, action){
 	$(form).on('submit', function(e){
-	  e.preventDefault();	  
+		e.preventDefault();	  
+		var flag = false;
+		if($(this).attr('erase-cart')){
+			flag = true;
+		}
 	  hide($('.feedback'));
 	  $.post(url, $(form).serialize())
 	  .done(function(data){
+			if(flag){
+				localStorage.removeItem("cart");
+				localStorage.removeItem("cart_total");
+			}
 		responses(data, action);
 	  }).fail(function(data){
 		getErrors(data);  
@@ -269,6 +277,9 @@ function responses(data, action){
 	  	$('.modal-main-title').html(data.title);
 	  	$('.modal_content').html(data.response);
 		$('#modal_footer_buttons').html('<br><a type="button" class="btn btn-primary" href="'+data.location+'" class="button pink">Continuar</a>');
+		break;
+		case 4: /*un modal ya abierto*/ 
+	  	console.log(data);
 	  break;
 	  default:
 	  window.location.href = ''+action; //only Redirect
