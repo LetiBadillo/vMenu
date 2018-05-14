@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrdersRequest;
@@ -26,11 +27,12 @@ class OrdersController extends Controller
          */
         if(Auth::user()->user_type == 1 || Auth::user()->user_type == 2 && $request->ws=="report"){
             $users = User::where('user_type', 4)->with('orders');
+            
             if($request->user){
                 $users = $users->where('id', $request->user);
             }
             $users = $users->get();
-            return view('order.report', compact('users'));
+            return view('order.report', compact(['users', 'data']));
         }
         if(Auth::user()->user_type < 3 ){
             $orders = Order::all();     
