@@ -267,18 +267,18 @@ function responses(data, action){
 	  case 1: /*Alert*/ 
 	  	$('.modal-main-title').html('');
 	  	$('.modal_content').html(data.response);
-	  	$('#myModal').modal('show');
+	  	$('#reservationModal').modal('show');
 	  break;
 	  case 2: /*Alert with redirect*/ 
 	  	$('.modal-main-title').html(data.title);
 	  	$('.modal_content').html(data.response);
-		$('.modal_footer_buttons').html('<a type="button" class="btn btn-secondary" href="'+data.location+'" class="button pink">Continuar</a>');
-		$('#myModal').modal('show');
+		$('#modal_footer_buttons').html('<br><a type="button" class="btn btn-primary" href="'+data.location+'" class="button pink">Continuar</a>');
+		$('#reservationModal').modal('show');
 	  break;
 	  case 3: /*un modal ya abierto*/ 
 	  	$('.modal-main-title').html(data.title);
 	  	$('.modal_content').html(data.response);
-		$('.modal_footer_buttons').html('<a type="button" class="btn btn-secondary" href="'+data.location+'" class="button pink">Continuar</a>');
+		$('#modal_footer_buttons').html('<br><a type="button" class="btn btn-primary" href="'+data.location+'" class="button pink">Continuar</a>');
 	  break;
 	  default:
 	  window.location.href = ''+action; //only Redirect

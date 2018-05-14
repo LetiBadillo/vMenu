@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductsRequest extends FormRequest
+class UpdateProductsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,7 @@ class StoreProductsRequest extends FormRequest
             'price' => 'required|numeric', 
             'type' => 'required|integer|between:1,6', 
             'is_featured' => 'integer|between:7,10|nullable',
-            'picture' => 'required|image',
+            'picture' => 'image',
             'enabled' => 'integer|between:0,1'
         ];
     }
@@ -48,7 +48,6 @@ class StoreProductsRequest extends FormRequest
         'type.required'  => 'Este campo es requerido.',
         'type.integer'  => 'Ese formato no es compatible.',
         'is_featured.integer'  => 'Ese formato no es compatible.',
-        'picture.required'  => 'Este campo es requerido.',
         'picture.image'  => 'Ese formato no es compatible.',
         'enabled.integer'  => 'Ese formato no es compatible.',
         'enabled.between'  => 'Ese formato no es compatible.',

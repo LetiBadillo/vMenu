@@ -32,43 +32,6 @@
   </head>
 
   <body data-spy="scroll" data-target="#ftco-navbar" data-offset="200">
-      
-
-    <!--<nav class="navbar fixed-top navbar-expand-sm pb-0 navbar-light">
-        <div class="container">
-            <a class="navbar-brand mr-5 mb-0" href="#">vMenú</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav ml-auto">
-                <li class="nav-item active" id="inicio">
-                    <a href="#" class="nav-link">INICIO</a>
-                </li>
-                
-                <li class="nav-item" id="cuenta">
-                    <a href="#" class="nav-link">MENÚ</a>
-                </li>
-
-
-                <li class="materias nav-item dropdown">
-                    <a class="nav-link" href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CUENTA </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown10">
-                    <a class="dropdown-item" href="#">PEDIDOS</a>
-                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">SALIR</a>          
-                    <form id="logout-form" action="#" method="POST" style="display: none;">@csrf</form> 
-                    </div>
-                </li>
-                
-                <li class="nav-item" id="cart">
-                    <a href="#" class="nav-link"></a>
-                </li>
-
-                </ul>
-            </div>
-        </div>
-    </nav>-->
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
       <div class="container">
@@ -79,7 +42,7 @@
 
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active"><a href="#section-home" class="nav-link">Inicio</a></li>
+            <li class="nav-item hidden-element active"><a href="#section-home" class="nav-link">Inicio</a></li>
             <li class="nav-item hidden-element"><a href="#section-menu" class="nav-link">Menú</a></li>
             <li class="nav-item hidden-element"><a href="#section-combos" class="nav-link">Combos </a></li>
             <li class="nav-item hidden-element"><a href="#section-sugerencias" class="nav-link">Sugerencias</a></li>
@@ -99,8 +62,7 @@
                 <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Panel de administración</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="{{url('platillos')}}">Productos/Combos</a>
-                            <a class="dropdown-item" href="#">Banners</a>
+                            <a class="dropdown-item" href="{{url('menu')}}">Productos/Combos</a>
                             <a class="dropdown-item" href="#">Reportes</a>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
                                     <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
@@ -209,7 +171,7 @@
                 <div class="modal_content"></div> 
                 <div class="modal_footer">
                     <div class="row">
-                        <div class="col-md-12" id="modal_footer_buttons">
+                        <div class="col-md-12 text-center" id="modal_footer_buttons">
                         </div>
                     </div>
                 </div> 
@@ -325,10 +287,10 @@ $(function() {
     $('.add-cart').on('click', function(e){
         $('#total-li').show().removeClass('d-none');
         var find_input = $('#navbarSide').find('.order-product-detail-'+$(this).attr('data-id'));
-        var element = $('#product-detail-'+$(this).attr('data-id'));
+        var element = $(this).closest('.product-detail-'+$(this).attr('data-id'))[0];
         var price = parseFloat($(element).find('.price').val())*parseFloat($(element).find('.quantity_input').val());
         if(find_input.length == 0){
-            var content = '<li class="navbar-side-item px-3 pt-2 -0 order-product-detail-'+$(this).attr('data-id')+'">\
+            var content = '<li class="navbar-side-item px-3 pt-2 py-0 order-product-detail-'+$(this).attr('data-id')+'">\
             <div class="media menu-item">\
                       <img class="mr-3 product-img img-fluid" src="'+$(element).find('.product-img').attr('src')+'">\
                       <div class="media-body">\
@@ -368,6 +330,73 @@ $(function() {
         $('.order_total').val(total);
 
     });
+
+    @if(Auth::user() && Auth::user()->user_type == 1)
+        var url_save_dish = "{{url('/menu')}}";
+            $('#add_dish').on('click', function(e){
+                e.preventDefault();
+                $('.modal-main-title').html('Agregar nuevo platillo');
+                $('.modal_content').html('<form id="dishForm" action="#" method="post" enctype="multipart/form-data">{{ csrf_field() }}\
+                  <div class="row">\
+                    <div class="col-md-12 form-group">\
+                      <label for="m_fname">Nombre</label>\
+                      <small class="text-danger name_error feedback d-none"></small>\
+                      <input type="text" name="name" class="form-control" id="m_fname">\
+                    </div>\
+                    <div class="col-md-12 form-group">\
+                      <label for="m_lname">Descripción</label>\
+                      <small class="text-danger description_error feedback d-none"></small>\
+                      <textarea class="form-control" id="m_message" name="description" cols="5" rows="3"></textarea>\
+                    </div>\
+                  </div>\
+                  <div class="row">\
+                    <div class="col-md-12 form-group">\
+                      <label for="m_people">Imagen</label>\
+                      <small class="text-danger picture_error feedback d-none"></small>\
+                      <input type="file" accept="image/*" class="form-control" name="picture">\
+                    </div>\
+                    <div class="col-md-6 form-group">\
+                      <label for="m_fname">Precio</label>\
+                      <small class="text-danger price_error feedback d-none"></small>\
+                      <input type="numeric" step=".01" name="price" class="form-control" id="m_fname">\
+                    </div>\
+                    <div class="col-md-6 form-group">\
+                      <label for="m_people">Tipo</label>\
+                      <small class="text-danger type_error feedback d-none"></small>\
+                      <select name="type" id="m_people" class="form-control">\
+                        <option value=""> --Selecionar --</option>\
+                        <option value="1">Desayuno </option>\
+                        <option value="2">Comida </option>\
+                        <option value="3"> Cena </option>\
+                        <option value="4"> Postre</option>\
+                        <option value="5"> Bebida</option>\
+                        <option value="6"> Combo</option>\
+                      </select>\
+                  </div>\
+                  </div>\
+                  <div class="row">\
+                  <div class="col-md-6 form-group">\
+                      <label for="m_people">Destacar como</label>\
+                      <small class="text-danger is_featured_error feedback d-none"></small>\
+                      <select name="is_featured" id="m_people" name="is_featured" class="form-control">\
+                        <option value=""> --Selecionar --</option>\
+                        <option value=""> No destacar</option>\
+                        <option value="7">Platillo del día </option>\
+                        <option value="8"> Recomendación del Chef </option>\
+                        <option value="10"> Banner</option>\
+                      </select>\
+                  </div>\
+                  <div class="col-md-6 form-group">\
+                  <label style="color: white !important;" for="m_people">Destacar como</label>\
+                  <button type="submit" style="border: 1px solid #F96D00 !important; background-color: #F96D00 !important; color: white !important;" class="btn btn-primary form-control">Guardar</button>\
+                  </div>\
+                  </div>\
+                </form>');
+                $('#reservationModal').modal('show');
+                saveAjax($('#dishForm'), url_save_dish, 3);
+            });
+        @endif
+
 });
 
     function plus(input, type){
@@ -424,73 +453,9 @@ $(function() {
             
         }
     });
-        @if(Auth::user() && Auth::user()->user_type == 1)
-        var url_save_dish = "{{url('/platillos')}}";
-            $('#add_dish').on('click', function(e){
-                e.preventDefault();
-                $('.modal-main-title').html('Agregar nuevo platillo');
-                $('.modal_content').html('<form id="dishForm" action="#" method="post" enctype="multipart/form-data">{{ csrf_field() }}\
-                  <div class="row">\
-                    <div class="col-md-12 form-group">\
-                      <label for="m_fname">Nombre</label>\
-                      <small class="text-danger name_error feedback d-none"></small>\
-                      <input type="text" name="name" class="form-control" id="m_fname">\
-                    </div>\
-                    <div class="col-md-12 form-group">\
-                      <label for="m_lname">Descripción</label>\
-                      <small class="text-danger description_error feedback d-none"></small>\
-                      <textarea class="form-control" id="m_message" name="description" cols="5" rows="3"></textarea>\
-                    </div>\
-                  </div>\
-                  <div class="row">\
-                    <div class="col-md-12 form-group">\
-                      <label for="m_people">Imagen</label>\
-                      <small class="text-danger picture_error feedback d-none"></small>\
-                      <input type="file" accept="image/*" class="form-control" name="picture">\
-                    </div>\
-                    <div class="col-md-6 form-group">\
-                      <label for="m_fname">Precio</label>\
-                      <small class="text-danger price_error feedback d-none"></small>\
-                      <input type="numeric" step=".01" name="price" class="form-control" id="m_fname">\
-                    </div>\
-                    <div class="col-md-6 form-group">\
-                      <label for="m_people">Tipo</label>\
-                      <small class="text-danger is_featured_error feedback d-none"></small>\
-                      <select name="type" id="m_people" class="form-control">\
-                        <option value=""> --Selecionar --</option>\
-                        <option value="1">Desayuno </option>\
-                        <option value="2">Comida </option>\
-                        <option value="3"> Cena </option>\
-                        <option value="4"> Postre</option>\
-                        <option value="5"> Bebida</option>\
-                        <option value="6"> Combo</option>\
-                      </select>\
-                  </div>\
-                  </div>\
-                  <div class="row">\
-                  <div class="col-md-6 form-group">\
-                      <label for="m_people">Destacar como</label>\
-                      <small class="text-danger is_featured_error feedback d-none"></small>\
-                      <select name="" id="m_people" name="is_featured" class="form-control">\
-                        <option value=""> --Selecionar --</option>\
-                        <option value=""> No destacar</option>\
-                        <option value="7">Platillo del día </option>\
-                        <option value="8"> Recomendación del Chef </option>\
-                        <option value="10"> Banner</option>\
-                      </select>\
-                  </div>\
-                  <div class="col-md-6 form-group">\
-                  <label style="color: white !important;" for="m_people">Destacar como</label>\
-                  <button type="submit" style="background-color: #F96D00 !important;" class="btn btn-primary form-control">Guardar</button>\
-                  </div>\
-                  </div>\
-                </form>');
-                $('#reservationModal').modal('show');
-                saveAjax($('#dishForm'), url_save_dish, 0);
-            });
-        @endif
+    }        
         
-    }
+    
 
 </script>
 @yield('scripts')
