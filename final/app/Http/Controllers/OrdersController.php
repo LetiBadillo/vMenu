@@ -24,12 +24,13 @@ class OrdersController extends Controller
          * 2 - Orden tomada
          * 3 - Entregada
          */
-        if(Auth::user()->user_type == 1 && $request->ws="report"){
+        if(Auth::user()->user_type == 1 || Auth::user()->user_type == 2 && $request->ws=="report"){
             $users = User::where('user_type', 4)->with('orders');
             if($request->user){
                 $users = $users->where('id', $request->user);
             }
-            return $users->get();
+            $users = $users->get();
+            return view('order.report', compact('users'));
         }
         if(Auth::user()->user_type < 3 ){
             $orders = Order::all();     

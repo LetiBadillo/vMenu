@@ -61,7 +61,7 @@
                             
                             </tr>
                             <tr class="collapse detail" id="c-{{$order->id}}">
-                            <td class="align-middle text-center" colspan="5">
+                            <td class="align-middle text-center px-5" colspan="2">
 
                                 @if(count($order->order_detail))                                    
                                     <br>
@@ -82,11 +82,30 @@
                                 <h4 class="text-dark">Total: {{$order->total}} </h4>
                                 <br>
                             </td>
+                            <td colspan="2" class="text-center middle-align align-middle">
+                            Status:
+                            <br>
+                            {{$order->statusLabel}}
+                            <br> <br>
+                            @if($order->status == 1)
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger progress-bar-striped" style="width:10%"></div>
+                                        </div>
+                                    @elseif($order->status == 2)
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning progress-bar-striped" style="width:60%"></div>
+                                        </div>
+                                    @elseif($order->status == 3)
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success progress-bar-striped" style="width:100%"></div>
+                                        </div>
+                                    @endif 
+                            </td>
                         </tr>
                         @endforeach                
                     @else
                     <tr>
-                    <td colspan="3" class="text-center">Aún no hay materias registradas</td>
+                    <td colspan="4" class="text-center">No hay elementos para mostrar</td>
                     </tr>
                     @endif
                     </tbody>

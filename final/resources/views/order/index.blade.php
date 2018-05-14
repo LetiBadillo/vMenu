@@ -131,7 +131,7 @@
                         @endforeach                
                     @else
                     <tr>
-                    <td colspan="3" class="text-center">Aún no hay materias registradas</td>
+                    <td colspan="3" class="text-center">Sin elementos para mostrar</td>
                     </tr>
                     @endif
                     </tbody>

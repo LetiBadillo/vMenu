@@ -57,12 +57,22 @@
                                     <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                         </div>
                     </li>
-                    <li class="nav-item"><a href="#section-contact" class="nav-link">Contacto</a></li>            
+                    <li class="hidden-element nav-item"><a href="#section-contact" class="nav-link">Contacto</a></li>            
                 @elseif(Auth::user()->user_type == 1)
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Panel de administración</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{url('menu')}}">Productos/Combos</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}">Pedidos</a>
+                            <a class="dropdown-item" href="{{url('pedidos')}}?ws=report">Reportes</a>
+                            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
+                                    <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
+                        </div>
+                  </li> 
+                  @elseif(Auth::user()->user_type == 2)
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pedidos</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{url('pedidos')}}">Pedidos</a>
                             <a class="dropdown-item" href="{{url('pedidos')}}?ws=report">Reportes</a>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>          
@@ -75,7 +85,7 @@
                   <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">@csrf</form> 
                 @endif
             @else
-                <li class="nav-item"><a href="{{url('login')}}" class="nav-link">Iniciar sesión</a></li>
+                <li class="nav-item hidden-element"><a href="{{url('login')}}" class="nav-link">Iniciar sesión</a></li>
             @endif
             @guest
             <li class="nav-item"><a href="#section-contact" class="nav-link">Contacto</a></li>            
@@ -360,6 +370,12 @@ $(function() {
         var url_order = "{{url('pedidos')}}";
         saveForm($('#orderNowForm'), url_order, 2);
     @endif
+    @guest
+      $('#orderNow').on('click', function(e){
+          e.preventDefault();
+          window.location.href = "/login";
+      });
+    @endguest
     @if(Auth::user() && Auth::user()->user_type != 4)
         var url = '/clientes?ws=all';
       fillSelect($('#rooms'), url);

@@ -17,6 +17,7 @@ class User extends Authenticatable
         'name', 'last_name', 'email', 'password', 'enabled', 'user_type', 'room', 'username'
     ];
 
+    protected $appends = ['balance'];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -25,6 +26,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getBalanceAttribute(){
+        $result = 0;
+        foreach ($this->orders as $key => $order) {
+            $result+= $order->total;
+        }
+        return $result;
+    }
 
     public function orders(){
         return $this->hasMany(Order::class);
